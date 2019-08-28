@@ -1,7 +1,16 @@
 import cv2
 import numpy as np
 import time
+import serial
 
+#### serial communication
+# 포트 설정
+PORT = '/dev/ttyUSB0'
+# 연결
+ser = serial.serial_for_url(PORT, baudrate=115200, timeout=1)
+
+
+#### yolo
 # Load Yolo
 net = cv2.dnn.readNet("yolov3-tiny.weights", "yolov3-tiny.cfg")
 #net = cv2.dnn.readNet("yolov3-tiny_custom_900_conv15.weights", "yolov3-tiny_custom.cfg")
@@ -63,11 +72,14 @@ while True:
             cv2.rectangle(frame, (x, y), (x + w, y + 30), color, -1)
             cv2.putText(frame, label + " " + str(round(confidence, 2)), (x, y + 30), font, 3, (255,255,255), 3)
 
+            #시리얼통신
+            ser.write(bytes('h', encoding='ascii'))  # 출력방식1
+
     elapsed_time = time.time() - starting_time
     fps = frame_id / elapsed_time
     cv2.putText(frame, "FPS: " + str(round(fps, 2)), (10, 50), font, 3, (0, 0, 0), 3)
     cv2.imshow("Image", frame)
-    cv2.imshow("Image1", frame1)
+
     key = cv2.waitKey(1)
     if key == ord('q'):
         break
