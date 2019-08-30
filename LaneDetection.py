@@ -1,3 +1,6 @@
+# opencv버전 : opencv-python==3.4.5.20
+#
+
 import cv2
 import sys
 import math
@@ -32,9 +35,6 @@ while (True):
             pt1 = (int(x0 + 1000 * (-b)), int(y0 + 1000 * (a)))
             pt2 = (int(x0 - 1000 * (-b)), int(y0 - 1000 * (a)))
             cv.line(cdst, pt1, pt2, (0, 0, 255), 3, cv.LINE_AA)
-
-                #cv.imshow("test", cdst)
-                #cv.waitKey(0)
 
     linesP = cv.HoughLinesP(dst, 1, np.pi / 180, 50, None, 50, 10)
 
