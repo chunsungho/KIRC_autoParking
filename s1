@@ -17,8 +17,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 system_time = 0
 flag = 0
-class Clock(QLCDNumber):
 
+class Clock(QLCDNumber):
 
     def __init__(self):
         super().__init__()
@@ -31,7 +31,7 @@ class Clock(QLCDNumber):
     def showTime(self):
         global system_time
         global flag
-        if flag  == 0:
+        if flag == 0:
             time = QTime.currentTime()
             text = time.toString('hh:mm:ss')
             system_time = text
@@ -69,11 +69,8 @@ class Clock(QLCDNumber):
 class Ui_MainWindow(object):
     def ok(self):
         global flag
-        self.window = QtWidgets.QMainWindow()
-        self.ui = Ui_MainWindow1()
-        self.ui.setup(self.window)
-        self.window.show()
-        MainWindow.hide()
+        ui = Ui_MainWindow1()
+        ui.setup(MainWindow)
         flag = 2                   # 화면전환을 위한 flag
 
 
@@ -96,7 +93,7 @@ class Ui_MainWindow(object):
         self.lcdNumber.setObjectName("lcdNumber")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(340, 400, 221, 71))
-        self.pushButton.clicked.connect(self.ok)   # 버튼 클릭시 ok함수 실행
+        self.pushButton.clicked.connect(Ui_MainWindow.ok)   # 버튼 클릭시 ok함수 실행
 
         font = QtGui.QFont()
         font.setPointSize(20)
@@ -132,8 +129,6 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     clock = Clock()  # Clock 객체 만들면 생성자 바로 호출된다.
 
-    # clock.show()
-
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
@@ -141,4 +136,3 @@ if __name__ == "__main__":
 
     app.exec()       # 루프
     sys.exit()       # 종료 버튼 누르면 끄기
-
