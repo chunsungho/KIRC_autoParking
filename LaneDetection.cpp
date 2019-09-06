@@ -13,14 +13,15 @@ Mat img_bgr, img_hsv, img_binary, img_gray, img_edge, img_contours, img_roi, img
 Point2f leftP[2], rightP[2], vanishP;
 Point p0 = Point(0, 0);
 
-//hsv Æ®·¢¹Ù¿¡¼­ »ç¿ëµÇ´Â º¯¼ö 
+
+//hsv íŠ¸ë™ë°”ì—ì„œ ì‚¬ìš©ë˜ëŠ” ë³€ìˆ˜ 
 int LowH = 0; //0;//0
 int HighH = 144; //52;//17
 int LowS = 118; //0;//150
 int HighS = 255; //67;//255
 int LowV = 118; //88
 int HighV = 255; //255
-				 //Canny edge Æ®·¢¹Ù º¯¼ö
+				 //Canny edge íŠ¸ë™ë°” ë³€ìˆ˜
 int lowThreshold = 50;
 int highThreshold = 150;
 
@@ -61,21 +62,21 @@ double movingAFilter_y(int input) {
 
 
 void filter_color()
-{	//Æ¯Á¤»ö¸¸ ÃßÃâÇÏ´Â ÇÔ¼ö
-	cvtColor(img_bgr, img_hsv, COLOR_BGR2HSV); //hsv¿µ»óÀ¸·Î º¯È¯
-	inRange(img_hsv, Scalar(LowH, LowS, LowV), Scalar(HighH, HighS, HighV), img_binary); //Æ¯Á¤»ö °ËÃâ
+{	//íŠ¹ì •ìƒ‰ë§Œ ì¶”ì¶œí•˜ëŠ” í•¨ìˆ˜
+	cvtColor(img_bgr, img_hsv, COLOR_BGR2HSV); //hsvì˜ìƒìœ¼ë¡œ ë³€í™˜
+	inRange(img_hsv, Scalar(LowH, LowS, LowV), Scalar(HighH, HighS, HighV), img_binary); //íŠ¹ì •ìƒ‰ ê²€ì¶œ
 
-																						 //morphological opening ÀÛÀº Á¡µéÀ» Á¦°Å 
+																						 //morphological opening ì‘ì€ ì ë“¤ì„ ì œê±° 
 	erode(img_binary, img_binary, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
 	dilate(img_binary, img_binary, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
 
-	//morphological closing ¿µ¿ªÀÇ ±¸¸Û ¸Ş¿ì±â 
+	//morphological closing ì˜ì—­ì˜ êµ¬ë© ë©”ìš°ê¸° 
 	dilate(img_binary, img_binary, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
 	erode(img_binary, img_binary, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
 }
 
 void line_detect(Mat &img_line, vector<Vec2f> lines)
-{	//´ëÇ¥Â÷¼± ÃßÃâÇÏ´Â ÇÔ¼ö
+{	//ëŒ€í‘œì°¨ì„  ì¶”ì¶œí•˜ëŠ” í•¨ìˆ˜
 
 	img_line = img_bgr.clone();
 
@@ -84,33 +85,33 @@ void line_detect(Mat &img_line, vector<Vec2f> lines)
 
 	for (size_t i = 0; i < lines.size(); i++)
 	{
-		Vec2f l = lines[i];		// ¿©±â¿¡ ¹«½¼ º¯¼ö°¡ ÀúÀåµÇ´Â°ÅÁö?
+		Vec2f l = lines[i];		// ì—¬ê¸°ì— ë¬´ìŠ¨ ë³€ìˆ˜ê°€ ì €ì¥ë˜ëŠ”ê±°ì§€?
 
 		double rho = l[0];
 		double theta = l[1];
 
-		if (theta < CV_PI * 2 / 5)	//72µµ
+		if (theta < CV_PI * 2 / 5)	//72ë„
 		{
-			right_lines.push_back(l);	//Àü¼ºÈ£ ¼Ò½º
-			//left_lines.push_back(l); //¿ŞÂÊ Â÷¼± ÃßÃâ
+			right_lines.push_back(l);	//ì „ì„±í˜¸ ì†ŒìŠ¤
+			//left_lines.push_back(l); //ì™¼ìª½ ì°¨ì„  ì¶”ì¶œ
 		}
-		else if (theta > CV_PI * 3 / 5)	//108µµ		-> ¾îÂ¶µç ³ªÁß¿¡ ¹Ù²ã¾ß ÇÏ´Â ¼öÄ¡. ÀÌÀ¯ : Ä«¸Ş¶óÀÇ À§Ä¡¿¡ µû¶ó ¼±ÀÇ °¢µµ°¡ ´Ù¸£°Ôº¸ÀÓ
+		else if (theta > CV_PI * 3 / 5)	//108ë„		-> ì–´ì¨‹ë“  ë‚˜ì¤‘ì— ë°”ê¿”ì•¼ í•˜ëŠ” ìˆ˜ì¹˜. ì´ìœ  : ì¹´ë©”ë¼ì˜ ìœ„ì¹˜ì— ë”°ë¼ ì„ ì˜ ê°ë„ê°€ ë‹¤ë¥´ê²Œë³´ì„
 		{
-			left_lines.push_back(l); //Àü¼ºÈ£ ¼Ò½º
-			//right_lines.push_back(l); //¿À¸¥ÂÊ Â÷¼± ÃßÃâ
+			left_lines.push_back(l); //ì „ì„±í˜¸ ì†ŒìŠ¤
+			//right_lines.push_back(l); //ì˜¤ë¥¸ìª½ ì°¨ì„  ì¶”ì¶œ
 		}
 
 		float resultLine[2][2];
 
 		for (int i = 0; i < left_lines.size(); i++)
 		{
-			// Theta°¡ °¡Àå Å« ¼± 1°³¸¸ °ËÃâ
+			// Thetaê°€ ê°€ì¥ í° ì„  1ê°œë§Œ ê²€ì¶œ
 			resultLine[0][0] = left_lines[0][0];
 			resultLine[0][1] = left_lines[0][1];
 
 			for (size_t i = 1; i < left_lines.size(); i++)
 			{
-				if (left_lines[i][1] >= resultLine[0][1])	//¹Ù²Ş
+				if (left_lines[i][1] >= resultLine[0][1])	//ë°”ê¿ˆ
 				{
 					resultLine[0][0] = left_lines[i][0];
 					resultLine[0][1] = left_lines[i][1];
@@ -120,7 +121,7 @@ void line_detect(Mat &img_line, vector<Vec2f> lines)
 			double rho = resultLine[0][0];
 			double theta = resultLine[0][1];
 
-			//¼±±×¸®±â ÇÒ·Á¸é ÁÂÇ¥°ª °è»êÇØ¾ßÇÔ
+			//ì„ ê·¸ë¦¬ê¸° í• ë ¤ë©´ ì¢Œí‘œê°’ ê³„ì‚°í•´ì•¼í•¨
 			double a = cos(theta), b = sin(theta);
 			double x0 = a * rho, y0 = b * rho;
 			double x1 = (cvRound(x0 + (img_edge.rows + img_edge.cols) * (-b)));
@@ -133,12 +134,12 @@ void line_detect(Mat &img_line, vector<Vec2f> lines)
 			leftP[1].x = x2;
 			leftP[1].y = y2;
 
-			line(img_line, Point(x1, y1), Point(x2, y2), Scalar(255, 255, 0), 4, CV_8UC3); //¿ŞÂÊ Â÷¼± ±×¸®±â
+			line(img_line, Point(x1, y1), Point(x2, y2), Scalar(255, 255, 0), 4, CV_8UC3); //ì™¼ìª½ ì°¨ì„  ê·¸ë¦¬ê¸°
 		}
 
 		for (int i = 0; i < right_lines.size(); i++)
 		{
-			// Theta°¡ °¡Àå ÀÛÀº ¼± 1°³¸¸ °ËÃâ
+			// Thetaê°€ ê°€ì¥ ì‘ì€ ì„  1ê°œë§Œ ê²€ì¶œ
 			resultLine[1][0] = right_lines[0][0];
 			resultLine[1][1] = right_lines[0][1];
 
@@ -153,7 +154,7 @@ void line_detect(Mat &img_line, vector<Vec2f> lines)
 			double rho = resultLine[1][0];
 			double theta = resultLine[1][1];
 
-			//¼±±×¸®±â ÇÒ·Á¸é ÁÂÇ¥°ª °è»êÇØ¾ßÇÔ
+			//ì„ ê·¸ë¦¬ê¸° í• ë ¤ë©´ ì¢Œí‘œê°’ ê³„ì‚°í•´ì•¼í•¨
 			double a = cos(theta), b = sin(theta);
 			double x0 = a * rho, y0 = b * rho;
 			double x1 = (cvRound(x0 + (img_edge.rows + img_edge.cols) * (-b)));
@@ -166,19 +167,23 @@ void line_detect(Mat &img_line, vector<Vec2f> lines)
 			rightP[1].x = x2;
 			rightP[1].y = y2;
 
-			line(img_line, Point(x1, y1), Point(x2, y2), Scalar(255, 0, 255), 4, CV_8UC3); //¿À¸¥ÂÊ Â÷¼± ±×¸®±â
+			line(img_line, Point(x1, y1), Point(x2, y2), Scalar(255, 0, 255), 4, CV_8UC3); //ì˜¤ë¥¸ìª½ ì°¨ì„  ê·¸ë¦¬ê¸°
 		}
 	}
 }
 
 int main()
 {
-	VideoCapture videoCapture("yellow_test3.mp4"); //Â÷¼±ÀÎ½Äµ¿¿µ»ó ºÒ·¯¿À±â
-												   //VideoCapture videoCapture(0); //À¥Ä· ºÒ·¯¿À±â
+	
+
+	VideoCapture videoCapture(1); //ì›¹ìº  ë¶ˆëŸ¬ì˜¤ê¸°
+	printf("asdasd");
+	//VideoCapture videoCapture("yellow_test3.mp4"); //ì°¨ì„ ì¸ì‹ë™ì˜ìƒ ë¶ˆëŸ¬ì˜¤ê¸°
+												   
 
 	if (!videoCapture.isOpened())
 	{
-		cout << "µ¿¿µ»óÀ» ¿­¼ö ¾ø½À´Ï´Ù. \n" << endl;
+		cout << "ë™ì˜ìƒì„ ì—´ìˆ˜ ì—†ìŠµë‹ˆë‹¤. \n" << endl;
 
 		char a;
 		cin >> a;
@@ -186,49 +191,53 @@ int main()
 		return -1;
 	}
 
-	/*// hsv Æ®·¢¹Ù
-	namedWindow("Æ¯Á¤»ö ÃßÃâ", WINDOW_AUTOSIZE);
-	createTrackbar("LowH", "Æ¯Á¤»ö ÃßÃâ", &LowH, 179); //Hue (0 - 179)
-	createTrackbar("HighH", "Æ¯Á¤»ö ÃßÃâ", &HighH, 179);
-	createTrackbar("LowS", "Æ¯Á¤»ö ÃßÃâ", &LowS, 255); //Saturation (0 - 255)
-	createTrackbar("HighS", "Æ¯Á¤»ö ÃßÃâ", &HighS, 255);
-	createTrackbar("LowV", "Æ¯Á¤»ö ÃßÃâ", &LowV, 255); //Value (0 - 255)
-	createTrackbar("HighV", "Æ¯Á¤»ö ÃßÃâ", &HighV, 255);*/
+	/*// hsv íŠ¸ë™ë°”
+	namedWindow("íŠ¹ì •ìƒ‰ ì¶”ì¶œ", WINDOW_AUTOSIZE);
+	createTrackbar("LowH", "íŠ¹ì •ìƒ‰ ì¶”ì¶œ", &LowH, 179); //Hue (0 - 179)
+	createTrackbar("HighH", "íŠ¹ì •ìƒ‰ ì¶”ì¶œ", &HighH, 179);
+	createTrackbar("LowS", "íŠ¹ì •ìƒ‰ ì¶”ì¶œ", &LowS, 255); //Saturation (0 - 255)
+	createTrackbar("HighS", "íŠ¹ì •ìƒ‰ ì¶”ì¶œ", &HighS, 255);
+	createTrackbar("LowV", "íŠ¹ì •ìƒ‰ ì¶”ì¶œ", &LowV, 255); //Value (0 - 255)
+	createTrackbar("HighV", "íŠ¹ì •ìƒ‰ ì¶”ì¶œ", &HighV, 255);*/
 
 	while (1)
 	{
-		videoCapture.read(img_bgr); //¿øº»¿µ»ó ºÒ·¯¿È
+		videoCapture.read(img_bgr); //ì›ë³¸ì˜ìƒ ë¶ˆëŸ¬ì˜´
+		printf("1");
 		if (img_bgr.empty()) break;
 
-		filter_color(); //Æ¯Á¤»ö ÃßÃâ
-						//cvtColor(img_bgr, img_gray, COLOR_BGR2GRAY); //¿µ»ó Èæ¹éÀ¸·Î º¯È¯
-		GaussianBlur(img_binary, img_binary, Size(5, 5), 0, 0); //°¡¿ì½Ã¾È ºí·¯(Size·Î ºí·¯¼¼±â Á¶Àı,¼ıÀÚ°¡ Å¬¼ö·Ï ¹¶°³Áü)
-		Canny(img_binary, img_edge, lowThreshold, highThreshold); //Ä³´Ï¿§Áö °ËÃâ
-
-		//¹Ù·Î À±°û¼± µû¿Â´Ù
-		Mat img_roi(img_edge, Rect(0, 0, img_edge.cols, img_edge.rows)); //ÀÌ¹ÌÁö °ü½É¿µ¿ª ¼³Á¤
-
+		filter_color(); //íŠ¹ì •ìƒ‰ ì¶”ì¶œ
+						//cvtColor(img_bgr, img_gray, COLOR_BGR2GRAY); //ì˜ìƒ í‘ë°±ìœ¼ë¡œ ë³€í™˜
+		printf("2");
+		GaussianBlur(img_binary, img_binary, Size(5, 5), 0, 0); //ê°€ìš°ì‹œì•ˆ ë¸”ëŸ¬(Sizeë¡œ ë¸”ëŸ¬ì„¸ê¸° ì¡°ì ˆ,ìˆ«ìê°€ í´ìˆ˜ë¡ ë­‰ê°œì§)
+		Canny(img_binary, img_edge, lowThreshold, highThreshold); //ìºë‹ˆì—£ì§€ ê²€ì¶œ
+		printf("3");
+		//ë°”ë¡œ ìœ¤ê³½ì„  ë”°ì˜¨ë‹¤
+		Mat img_roi(img_edge, Rect(0, 0, img_edge.cols, img_edge.rows)); //ì´ë¯¸ì§€ ê´€ì‹¬ì˜ì—­ ì„¤ì •
+		printf("b");
 		vector<Vec2f> lines;
 		HoughLines(img_roi, lines, 1, CV_PI / 180, 100, 0, 0, 0, CV_PI);
-		line_detect(img_line, lines); //Â÷¼± ÃßÃâ
+		printf("a");
+		line_detect(img_line, lines); //ì°¨ì„  ì¶”ì¶œ
+		
 
-
-		 //¼Ò½ÇÁ¡ °ËÃâ
+		 //ì†Œì‹¤ì  ê²€ì¶œ
 		float leftLineA = (float)(leftP[1].y - leftP[0].y) / (float)(leftP[1].x - leftP[0].x);
 		float leftLineB = leftP[1].y - leftLineA * leftP[1].x;
 		float rightLineA = (float)(rightP[1].y - rightP[0].y) / (float)(rightP[1].x - rightP[0].x);
 		float rightLineB = rightP[1].y - rightLineA * rightP[1].x;
 
-		// 1Â÷ ¼Ò½ÇÁ¡: ÁÂ¿ì 1Â÷¼±ÀÇ ±³Á¡
+		// 1ì°¨ ì†Œì‹¤ì : ì¢Œìš° 1ì°¨ì„ ì˜ êµì 
 		vanishP.x = (double)((rightLineB - leftLineB) / (leftLineA - rightLineA));
 		vanishP.y = (double)(leftLineA * vanishP.x + leftLineB);
 
 		vanishP.x = movingAFilter_x(vanishP.x);
 		vanishP.y = movingAFilter_y(vanishP.y);
-
+		printf("%d ,%d", vanishP.x, vanishP.y);
+		
 		double slope;
 		if (vanishP.x - img_line.cols * 0.5 == 0)
-			slope = 999.00; // Á÷Áø
+			slope = 999.00; // ì§ì§„
 		else
 		{
 			if (vanishP.y < 0)
@@ -238,20 +247,22 @@ int main()
 
 
 		}
-		printf("±â¿ï±â : %f\n", slope);
-
-		// ¿©±â¼­ line ÇÔ¼ö ½áÁÖ±âÀü¿¡ vanishP ¶ó´Â Á¡À» ÀÌµ¿Æò±Õ ÇÊÅÍ¸¦ ÅëÇØ °ª º¸Á¤À» ÇØÁÖ¾î¾ß ÇÑ´Ù.
+		printf("ê¸°ìš¸ê¸° : %f\n", slope);
+		if (vanishP.x < 0) {
+			continue;
+		}
+		// ì—¬ê¸°ì„œ line í•¨ìˆ˜ ì¨ì£¼ê¸°ì „ì— vanishP ë¼ëŠ” ì ì„ ì´ë™í‰ê·  í•„í„°ë¥¼ í†µí•´ ê°’ ë³´ì •ì„ í•´ì£¼ì–´ì•¼ í•œë‹¤.
 		line(img_line, Point(img_line.cols * 0.5, img_line.rows), vanishP, Scalar(0, 255, 0), 4, CV_8UC3);
 
-		//hconcat(img_line, img_roi, img_result); //¿µ»ó °¡·Î·Î ºÙÀÌ±â
-		//imshow("¿øº» ¿µ»ó", img_bgr);
-		//imshow("ÀÌÁøÈ­ ¿µ»ó", img_binary);
-		//imshow("¿§Áö °ËÃâ", img_edge);
-		imshow("Â÷¼±°ËÃâ", img_line);
-		imshow("°ü½É¿µ¿ª", img_roi);
+		//hconcat(img_line, img_roi, img_result); //ì˜ìƒ ê°€ë¡œë¡œ ë¶™ì´ê¸°
+		//imshow("ì›ë³¸ ì˜ìƒ", img_bgr);
+		//imshow("ì´ì§„í™” ì˜ìƒ", img_binary);
+		//imshow("ì—£ì§€ ê²€ì¶œ", img_edge);
+		imshow("ì°¨ì„ ê²€ì¶œ", img_line);
+		imshow("ê´€ì‹¬ì˜ì—­", img_roi);
 
 
-		if (waitKey(1) == 27) break; //ESCÅ° ´©¸£¸é Á¾·á 
+		if (waitKey(1) == 27) break; //ESCí‚¤ ëˆ„ë¥´ë©´ ì¢…ë£Œ 
 		/*
 		leftP[0] = Point(0,0);
 		leftP[1] = Point(0, 0);
