@@ -65,14 +65,25 @@ class Clock(QLCDNumber):
             ui = Ui_MainWindow1()
             ui.setup(MainWindow)
 
+        elif flag == 3:                   # 화면전환을 위한 flag
+            time = QTime.currentTime()
+            text = time.toString('hh:mm:ss')
+            system_time = text
+            if (time.second() % 2) == 0:
+                text = text[:2] + ' ' + text[3:]
+            self.display(text)
+            ui = Ui_MainWindow1_in()
+            ui.setup(MainWindow)
+
 class Ui_MainWindow(object):
 
     def carIn(self):
+        print("carIn 함수 불림")
         global flag
         ui = Ui_MainWindow1_in()
         ui.setup(MainWindow)
         MainWindow.show()
-        flag = 2  # 화면전환을 위한 flag
+        flag = 3  # 화면전환을 위한 flag
 
 
     def ok(self):
