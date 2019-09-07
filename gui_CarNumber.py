@@ -472,8 +472,8 @@ class Ui_MainWindow1(object):
         if len(car_number_str) != 4:
             print('4자리를 입력하지 않았습니다')
         else:
-            assign_autopush(car_number_str)     # 명근이가 바꿔줄때까지 임시로 씀
-            #assign_pop(car_number_str)
+            #assign_autopush(car_number_str)     # 명근이가 바꿔줄때까지 임시로 씀
+            assign_pop(car_number_str)
 
     #################################
     ##### 위에서 선언한 list와 변수 #####
