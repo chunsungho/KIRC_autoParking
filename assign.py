@@ -1,54 +1,88 @@
 import random
+from File_IO import File_in_gui
+
+list_parkingArea1 = [1,2,3,4,5,6]
+list_parkingArea2 = [7,8,9,10,11,12,13]
+
+# parkingArea 리스트는 주차 가능한 공간들의 모임.
+
+dic = {}
+
+areaAssignFlag = 2
 
 
-parking_area=[1,2,3,4,5,6,7,8,9,10,11,12,13]  # parking_area 리스트는 주차 가능한 공간들의 모임.
-
-dic = {14:'none'}
-temp = 0
-
-cnt= 0
-
-def assign_push(key,value):
-    if key in dic:
-        print('해당 주차공간은 이미 차있습니다.')
-    else:
-        print("assign_push")
-        print(str(key) + '번 주차공간에 ' + str(value) + ' 차량 등록됨')
-        dic[key] = value
-        parking_area.remove(key)  # list 에서 남은 주차공간 삭제해줌
-
-
+# 차 빠지면 리스트에서 해당번호 복구
+# 사전[areNUmer] = 0
+# g -> m 주차공간 정보 전송
 def assign_pop(value):
-    global temp
-    global cnt
 
-    temp = 0
+
     if value not in dic.values():
         print('그런 차는 없습니다.')
-    else :
+    else:
         for k, v in dic.items():  # mydict에 아이템을 하나씩 접근해서, key, value를 각각 k, v에 저.장.
             if v == value:
-                print(str(k) + ' 번 주차공간에 있던 ' + str(v) + ' 차량 출차')
-                temp = k
-                parking_area.append(k)
-                cnt -= 1
-                print("주차장에 남은 차량 수 :" + str(cnt))
-        del dic[temp]
+                #k 가 10의 자리인지 1의자리인지 따져야함
+                if k >= 10:
+                    File_in_gui("/home/chun/Desktop/KIRC_GYM/GtoM", k + 'o')
+                elif k < 10:
+                    File_in_gui("/home/chun/Desktop/KIRC_GYM/GtoM", '0' + str(k) + 'o')
 
-def assign_autopush(value):       # 입력값은 차량번호 4자리. 16개 자리 체크 후 할당.  # 바리케이트에서 번호를 인식하여 차량을 등록하는 함수.
+                if k > 6:
+                    list_parkingArea2.append(k)
+                else:
+                    list_parkingArea1.append(k)
+                del dic[k]
+                break
+
+        for k, v in dic.items():
+            print(str(k) + ' 번에' + str(v) + '가 있습니다.')
+
+
+
+def assign_autopush(value):       # 입력값은 차량번호 4자리. 16개 자리 체크 후 할당.  # 바리케이트에서 번호를 인식하여 차량을 등록하는 함수.j
                                   # value는 string 으로 입력받는게 좋음. 예를들어 '3450' 이런식으로.
-    global cnt
+    global areaAssignFlag
 
-    if len(parking_area) == 0:
-        print('주차공간이 모두 다 찼습니다.')
-    else :
-        cnt += 1
-        key = random.choice(parking_area)
-        dic[key] = value
-        print("주차장에 남은 차량 수 :" + str(cnt))
-        print(str(key) + ' 번 주차공간에 ' + str(value) + ' 차량 등록됨')
-        parking_area.remove(key)  # parking_area 리스트는 주차 가능한 공간들의 모임.
-                                  # 주차를 했으니, 리스트에서 그 번호를 삭제한다.
+    if areaAssignFlag == 2 :
+
+        areaNumber= random.choice(list_parkingArea2)
+        list_parkingArea2.remove(areaNumber)
+        dic[areaNumber] = value
+
+        # g -> m 으로 areaNumber 전송
+        #숫자를 무조건 2자리로 맞추기 위한작업
+        if areaNumber >= 10:
+            str_areaNumber = str(areaNumber)
+        elif areaNumber < 10:
+            str_areaNumber = '0' + str(areaNumber)
+        File_in_gui("/home/chun/Desktop/KIRC_GYM/GtoM", str_areaNumber + 'i')
+
+        areaAssignFlag = 1
+
+        print(str(areaNumber) + ' 번 주차공간에 ' + str(value) + ' 차량 등록됨')
+
+        for k, v in dic.items():
+            print(str(k) + ' 번에' + str(v) + '가 있습니다.')
 
 
+
+
+    elif areaAssignFlag == 1:
+
+        areaNumber = random.choice(list_parkingArea1)
+        list_parkingArea1.remove(areaNumber)
+        dic[areaNumber] = value
+
+        # g -> m 으로 areaNumber 전송
+        # 숫자를 무조건 2자리로 맞추기 위한작업
+        str_areaNumber = '0' + str(areaNumber)
+        File_in_gui("/home/chun/Desktop/KIRC_GYM/GtoM", str_areaNumber + 'i')
+
+        # 디버깅용
+        print(str(areaNumber) + ' 번 주차공간에 ' + str(value) + ' 차량 등록됨')
+        for k, v in dic.items():
+            print(str(k) + ' 번에' + str(v) + '가 있습니다.')
+
+        areaAssignFlag = 2
 
