@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'viewClock.ui'
@@ -1036,7 +1037,7 @@ class Clock(QLCDNumber):
             time = QTime.currentTime()
             text = time.toString('hh:mm:ss')
             system_time = text
-            print(system_time)
+            #print(system_time)
             if (time.second() % 2) == 0:
                 text = text[:2] + ' ' + text[3:]
             self.display(text)
@@ -1046,7 +1047,7 @@ class Clock(QLCDNumber):
             time = QTime.currentTime()
             text = time.toString('hh:mm:ss')
             system_time = text
-            print(system_time)
+            #print(system_time)
             if (time.second() % 2) == 0:
                 text = text[:2] + ' ' + text[3:]
             self.display(text)
@@ -1170,5 +1171,4 @@ if __name__ == "__main__":
 
     app.exec()       # 루프
     sys.exit()       # 종료 버튼 누르면 끄기
-
 
