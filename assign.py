@@ -1,5 +1,4 @@
 import random
-from gui_CarNumber import *
 
 
 parking_area=[1,2,3,4,5,6,7,8,9,10,11,12,13]  # parking_area 리스트는 주차 가능한 공간들의 모임.
@@ -7,6 +6,7 @@ parking_area=[1,2,3,4,5,6,7,8,9,10,11,12,13]  # parking_area 리스트는 주차
 dic = {14:'none'}
 temp = 0
 
+cnt= 0
 
 def assign_push(key,value):
     if key in dic:
@@ -20,6 +20,8 @@ def assign_push(key,value):
 
 def assign_pop(value):
     global temp
+    global cnt
+
     temp = 0
     if value not in dic.values():
         print('그런 차는 없습니다.')
@@ -29,28 +31,24 @@ def assign_pop(value):
                 print(str(k) + ' 번 주차공간에 있던 ' + str(v) + ' 차량 출차')
                 temp = k
                 parking_area.append(k)
+                cnt -= 1
+                print("주차장에 남은 차량 수 :" + str(cnt))
         del dic[temp]
 
 def assign_autopush(value):       # 입력값은 차량번호 4자리. 16개 자리 체크 후 할당.  # 바리케이트에서 번호를 인식하여 차량을 등록하는 함수.
                                   # value는 string 으로 입력받는게 좋음. 예를들어 '3450' 이런식으로.
+    global cnt
+
     if len(parking_area) == 0:
         print('주차공간이 모두 다 찼습니다.')
     else :
+        cnt += 1
         key = random.choice(parking_area)
         dic[key] = value
+        print("주차장에 남은 차량 수 :" + str(cnt))
         print(str(key) + ' 번 주차공간에 ' + str(value) + ' 차량 등록됨')
         parking_area.remove(key)  # parking_area 리스트는 주차 가능한 공간들의 모임.
                                   # 주차를 했으니, 리스트에서 그 번호를 삭제한다.
-
-'''
-assign_autopush('1444')
-assign_autopush('1226')
-assign_autopush('1316')
-assign_autopush('1561')
-assign_autopush('5168')
-assign_autopush('8948')
-'''
-
 
 
 
