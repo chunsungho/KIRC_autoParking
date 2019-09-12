@@ -4,7 +4,6 @@ import KIRC_master_function
 import time
 import serial
 
-
 if __name__ == '__main__':
 
     kf = KIRC_master_function.KIRC_function()
@@ -34,17 +33,17 @@ if __name__ == '__main__':
 
         #yolo에서 들어온 패킷을 roi1,2,3,4에 저장하는 함수.
         kf.whichROIactive(packetYolo)
-
         # 지금 명령어를 실행중인지 아니면 넣어줄수 있는 상태인지 판단하는 함수
         kf.bufToOrder()
-
         kf.Roi_Update()
-
+        
         #활성화된 roi가 내가 원하는 led 의 위치와 동일한지 확인
         #동일하면 코어텍스로 명령어를 보내
         #해당 Area에 대한 명령어가 종료되면 다음 명령어를 받을 준비.
+        
         for R in kf.RoiList:
-            if R == kf.que_orderING_1[0]:    #16R 이런식으로 되어있어서 수정해야함
+            str_tmp = kf.que_orderING_1[0][0] + kf.que_orderING_1[0][1]  
+            if R == str_tmp:    #16R 이런식으로 되어있어서 수정해야함
                 ser.write(bytes(kf.que_orderING_1[0], encoding='ascii'))  # 출력방식1
                 kf.que_orderING_1.popleft()     #이 명령어를 실행했으면 이제 다시는 실행안할거니까 삭제
 
