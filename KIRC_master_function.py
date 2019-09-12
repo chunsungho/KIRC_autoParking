@@ -2,7 +2,7 @@
 
 class KIRC_function:
     def __init__(self):
-        import serial
+
         from collections import deque
         self.n_parkingNumber = 7
         self.n_parkingArea = 2
@@ -21,7 +21,7 @@ class KIRC_function:
         self.str_ROI_4 = ''
         self.RoiList = []
 
-        #ser = serial.serial_for_url(uartPORT, baudrate=115200, timeout=1)
+        #ser = serial.serial_for_url(PORT, baudrate=115200, timeout=1)
 
 
     # 몇번주차공간, 몇번구역, in인지 out인지 판단함수
@@ -150,18 +150,26 @@ class KIRC_function:
             self.que_parkingAreaBuf_2.append(self.str_ledOrder_1)
             self.que_parkingAreaBuf_2.append(self.str_ledOrder_2)
 
-    def whichROIactive(self,packetYolo):
-        self.str_ROI_1 = packetYolo[0] + packetYolo[1]
-        self.str_ROI_2 = packetYolo[2] + packetYolo[3]
-        self.str_ROI_3 = packetYolo[4] + packetYolo[5]
-        self.str_ROI_4 = packetYolo[6] + packetYolo[7]
 
+    #bool == True이면 Buf가 업데이트 되어있는지도 체크해야된다 !!!!!!!!!!!!!!!!!!!!!!
     def bufToOrder(self):
-        if self.bool_parkingArea_1 == True:
+        if self.que_parkingAreaBuf_1.__len__() > 0 and self.bool_parkingArea_1 == True:
             # 명령어는 2개씩 가져온다
             self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
             self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
             self.bool_parkingArea_1 = False
+
+        if self.que_parkingAreaBuf_2.__len__() > 0 and self.bool_parkingArea_2 == True:
+            # 명령어는 2개씩 가져온다
+            self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
+            self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
+            self.bool_parkingArea_2 = False
+
+    def whichROIactive(self, packetYolo):
+        self.str_ROI_1 = packetYolo[0] + packetYolo[1]
+        self.str_ROI_2 = packetYolo[2] + packetYolo[3]
+        self.str_ROI_3 = packetYolo[4] + packetYolo[5]
+        self.str_ROI_4 = packetYolo[6] + packetYolo[7]
 
     def Roi_Update(self):
         self.RoiList = []
@@ -170,15 +178,20 @@ class KIRC_function:
         self.RoiList.append(self.str_ROI_3)
         self.RoiList.append(self.str_ROI_4)
 
+    def findActiveROI_makeRoiList(self, packetYolo):
+        self.whichROIactive(packetYolo)
+        # 지금 명령어를 실행중인지 아니면 넣어줄수 있는 상태인지 판단하는 함수
+        self.Roi_Update()
+
+    #아직 다 된거 아님
     # 활성화된 roi가 내가 원하는 led 의 위치와 동일한지 확인
     # 동일하면 코어텍스로 명령어를 보내
     # 해당 Area에 대한 명령어가 종료되면 다음 명령어를 받을 준비.
     def isTargetRoi_commandLIFI(self):
         for R in self.RoiList:
             if R == self.que_orderING_1[0]:  # 16R 이런식으로 되어있어서 수정해야함
-                ser.write(bytes(self.que_orderING_1[0], encoding='ascii'))  # 출력방식1
+                #ser.write(bytes(self.que_orderING_1[0], encoding='ascii'))  # 출력방식1
                 self.que_orderING_1.popleft()  # 이 명령어를 실행했으면 이제 다시는 실행안할거니까 삭제
-
                 if self.que_orderING_1.__len__() == 0:
                     self.bool_parkingArea_1 = True
                     print("1구역 명령완료")
