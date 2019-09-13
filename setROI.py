@@ -1,6 +1,5 @@
 import cv2
-import argparse
-# import numpy as np
+
 index = 1
 RoiList = []
 x1 = 0
@@ -41,8 +40,9 @@ def click_and_crop(event, x, y, flags, param):
         x2 = x
         y2 = y
         tmpList = [(x1,y1),(x2,y2),index]
-        index += 1
-        RoiList.append(tmpList)
+        #index += 1
+        #RoiList.append(tmpList)
+        RoiList.insert(index, tmpList)
         #print(RoiList)
         cropping = False
 
@@ -53,6 +53,10 @@ def click_and_crop(event, x, y, flags, param):
 if __name__ == '__main__':
     capture()
     index = 0
+    #initiaize RoiList
+    for i in range(30):
+        RoiList.append([(0,0),(0,0),i])
+
     # 이미지를 load 합니다.
     image = cv2.imread("ParkingLot.jpg")
     # 원본 이미지를 clone 하여 복사해 둡니다.
@@ -62,13 +66,6 @@ if __name__ == '__main__':
     cv2.setMouseCallback("image", click_and_crop)
 
 
-    '''
-    키보드에서 다음을 입력받아 수행합니다.
-    - q : 작업을 끝냅니다.
-    - r : 이미지를 초기화 합니다.
-    - c : ROI 사각형을 그리고 좌표를 출력합니다.
-    - z : revise
-    '''
     while True:
         # 이미지를 출력하고 key 입력을 기다립니다.
         cv2.imshow("image", image)
@@ -76,19 +73,19 @@ if __name__ == '__main__':
         # 만약 r이 입력되면, crop 할 영열을 리셋합니다.
         if key == ord("r"):
             image = clone.copy()
+            for i in range(30):
+               cv2.rectangle(image, RoiList[i][0], RoiList[i][1], (0, 255, 0), 1)
 
-        # 만약 c가 입력되고 ROI 박스가 정확하게 입력되었다면
-        # 박스의 좌표를 출력하고 crop한 영역을 출력합니다.
 
         #Console Out x,y
         elif key == ord("c"):
             for R in RoiList:
                 print(R)
-
-        elif key == ord('r'):
-
-
-       #elif key == ord("z"):
+            
+        elif key == ord("m"):
+            number = int(input("Input number : "))
+            index = number
+            del RoiList[number]
 
         # 만약 q가 입력되면 작업을 끝냅니다.
         elif key == ord("q"):
@@ -96,51 +93,3 @@ if __name__ == '__main__':
 
     # 모든 window를 종료합니다.
     cv2.destroyAllWindows()
-
-'''
-def on_mouse(event, x, y, flags, param):
-    if event == cv2.EVENT_LBUTTONDOWN:
-        points.append((x, y))
-        print(points)
-
-CAM_ID = 0
-def capture(camid = CAM_ID):
-    cam = cv2.VideoCapture(camid)
-    if cam.isOpened() == False:
-        print('cant open the cam (%d)' % camid)
-        return None
-    ret, frame = cam.read()
-    if frame is None:
-        print('frame is not exist')
-        return None
-    cv2.imwrite('ParkingLot.jpg',frame, params=[cv2.IMWRITE_PNG_COMPRESSION,0])
-    cam.release()
-
-
-
-
-
-if __name__ == '__main__':
-    capture()
-    points = list()
-    img = cv2.imread("ParkingLot.jpg")
-    cv2.namedWindow('img')
-    cv2.setMouseCallback('img', on_mouse)
-    cv2.imshow('ParkingLot.jpg', img)
-
-    while True:
-        if len(points) == 2:
-            x = points[0][0]
-            y = points[0][1]
-            ROI = img[y:points[1][1], x:points[1][0]]
-            cv2.rectangle(img, points[0], points[1], (0, 255, 0), 3)
-
-            #break
-        cv2.imshow("ROI", ROI)
-        cv2.waitKey(30)
-
-
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-'''
