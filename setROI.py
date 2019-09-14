@@ -1,3 +1,21 @@
+'''
+    - q : quit operation
+    - r : see all ROI you've saved
+    - c : console out x,y
+    - m : insert ROI with specific index
+
+HOW TO INSERT index 'i' Roi
+1. Press the key 'm'
+2. Input the index in console sou want to insert ROI
+3. Drag and drop mouse
+4. Successfully it will be completed and saved in 'RoiList'.
+  You can check this by pressing key 'c'.
+
+If you want to clear mistaken rectangles, Press the key 'r'.
+Then, you can see all ROI you've saved.
+
+'''
+
 import cv2
 
 index = 1
@@ -9,7 +27,9 @@ y2 = 0
 cropping = False
 
 CAM_ID = 0
-def capture(camid = CAM_ID):
+
+
+def capture(camid=CAM_ID):
     cam = cv2.VideoCapture(camid)
     if cam.isOpened() == False:
         print('cant open the cam (%d)' % camid)
@@ -18,8 +38,9 @@ def capture(camid = CAM_ID):
     if frame is None:
         print('frame is not exist')
         return None
-    cv2.imwrite('ParkingLot.jpg',frame, params=[cv2.IMWRITE_PNG_COMPRESSION,0])
+    cv2.imwrite('ParkingLot.jpg', frame, params=[cv2.IMWRITE_PNG_COMPRESSION, 0])
     cam.release()
+
 
 def click_and_crop(event, x, y, flags, param):
     # refPt와 cropping 변수를 global로 만듭니다.
@@ -39,23 +60,31 @@ def click_and_crop(event, x, y, flags, param):
     elif event == cv2.EVENT_LBUTTONUP:
         x2 = x
         y2 = y
-        tmpList = [(x1,y1),(x2,y2),index]
-        #index += 1
-        #RoiList.append(tmpList)
-        RoiList.insert(index, tmpList)
-        #print(RoiList)
+        tmpList = [(x1, y1), (x2, y2), index]
+        # index += 1
+        # RoiList.append(tmpList)
+        print(index)
+        #같은 번호의 인덱스로 들어오면 지우고 다시 체크되는걸로
+        if RoiList[index][2] == index:
+            del RoiList[index]
+        if index != 0:
+            RoiList.insert(index, tmpList)
+        # print(RoiList)
         cropping = False
 
         # ROI 사각형을 이미지에 그립니다.
-        cv2.rectangle(image, (x1,y1), (x2,y2), (0, 255, 0), 1)
+        cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 1)
         cv2.imshow("image", image)
 
+
 if __name__ == '__main__':
+    tup_00 = (0,0)
+    plusTenFlag = 0
     capture()
     index = 0
-    #initiaize RoiList
-    for i in range(30):
-        RoiList.append([(0,0),(0,0),i])
+    # initiaize RoiList
+    for i in range(0,31):
+        RoiList.append([(0, 0), (0, 0), i])
 
     # 이미지를 load 합니다.
     image = cv2.imread("ParkingLot.jpg")
@@ -65,8 +94,9 @@ if __name__ == '__main__':
     cv2.namedWindow("image")
     cv2.setMouseCallback("image", click_and_crop)
 
-
     while True:
+
+        #index = 0
         # 이미지를 출력하고 key 입력을 기다립니다.
         cv2.imshow("image", image)
         key = cv2.waitKey(1) & 0xFF
@@ -74,14 +104,15 @@ if __name__ == '__main__':
         if key == ord("r"):
             image = clone.copy()
             for i in range(30):
-               cv2.rectangle(image, RoiList[i][0], RoiList[i][1], (0, 255, 0), 1)
+                cv2.rectangle(image, RoiList[i][0], RoiList[i][1], (0, 255, 0), 1)
 
 
-        #Console Out x,y
+        # Console Out x,y
         elif key == ord("c"):
             for R in RoiList:
-                print(R)
-            
+                if R[0] != tup_00:
+                    print(R)
+
         elif key == ord("m"):
             number = int(input("Input number : "))
             index = number
@@ -90,6 +121,109 @@ if __name__ == '__main__':
         # 만약 q가 입력되면 작업을 끝냅니다.
         elif key == ord("q"):
             break
+
+        elif key == ord("1"):
+            if plusTenFlag == 0:
+                index = 1
+                del RoiList[index]
+            elif plusTenFlag == 1:
+                index = 11
+                del RoiList[index]
+            elif plusTenFlag == 2:
+                index = 21
+                del RoiList[index]
+        elif key == ord("2"):
+            if plusTenFlag == 0:
+                index = 2
+                del RoiList[index]
+            elif plusTenFlag == 1:
+                index = 12
+                del RoiList[index]
+            elif plusTenFlag == 2:
+                index = 22
+                del RoiList[index]
+        elif key == ord("3"):
+            if plusTenFlag == 0:
+                index = 3
+                del RoiList[index]
+            elif plusTenFlag == 1:
+                index = 13
+                del RoiList[index]
+            elif plusTenFlag == 2:
+                index = 23
+                del RoiList[index]
+        elif key == ord("4"):
+            if plusTenFlag == 0:
+                index = 4
+                del RoiList[index]
+            elif plusTenFlag == 1:
+                index = 14
+                del RoiList[index]
+            elif plusTenFlag == 2:
+                index = 24
+                del RoiList[index]
+        elif key == ord("5"):
+            if plusTenFlag == 0:
+                index = 5
+                del RoiList[index]
+            elif plusTenFlag == 1:
+                index = 15
+                del RoiList[index]
+            elif plusTenFlag == 2:
+                index = 25
+                del RoiList[index]
+        elif key == ord("6"):
+            if plusTenFlag == 0:
+                index = 6
+                del RoiList[index]
+            elif plusTenFlag == 1:
+                index = 16
+                del RoiList[index]
+            elif plusTenFlag == 2:
+                index = 26
+                del RoiList[index]
+        elif key == ord("7"):
+            if plusTenFlag == 0:
+                index = 7
+                del RoiList[index]
+            elif plusTenFlag == 1:
+                index = 17
+                del RoiList[index]
+            elif plusTenFlag == 2:
+                index = 27
+                del RoiList[index]
+        elif key == ord("8"):
+            if plusTenFlag == 0:
+                index = 8
+                del RoiList[index]
+            elif plusTenFlag == 1:
+                index = 18
+                del RoiList[index]
+            elif plusTenFlag == 2:
+                index = 28
+                del RoiList[index]
+        elif key == ord("9"):
+            if plusTenFlag == 0:
+                index = 9
+                del RoiList[index]
+            elif plusTenFlag == 1:
+                index = 19
+                del RoiList[index]
+            elif plusTenFlag == 2:
+                index = 29
+                del RoiList[index]
+        elif key == ord("0"):
+            if plusTenFlag == 0:
+                index = 10
+                del RoiList[index]
+            elif plusTenFlag == 1:
+                index = 20
+                del RoiList[index]
+            elif plusTenFlag == 2:
+                index = 30
+                del RoiList[index]
+            plusTenFlag += 1
+            del RoiList[index]
 
     # 모든 window를 종료합니다.
     cv2.destroyAllWindows()
