@@ -1,7 +1,14 @@
+# 만약 나중에 같은 packet_ROI를 연속으로 여러번 보내는게 문제가 된다면
+# ActiveROI를 큐로 만들고 각각의 원소를 크기순으로 정렬을 한 다음에
+# packet_ROI에 담고서 보내고
+# pre_packet_ROI에 저장한 다음에
+# 다음번에 패키지 보낼때 pre_packet_ROI != packet_ROI인지 확인하고 보내는 작업을 해야한다.
+
 import cv2
 import numpy as np
 import time
 import SetROI
+from File_IO import File_in_yolo
 
 class kirc_yolo:
     def __init__(self):
@@ -20,7 +27,24 @@ class kirc_yolo:
         self.starting_time = time.time()
         self.frame_id = 0
 
+        self.ActiveRoi = ''
+        self.Packet_ROI = ''
+        self.pre_Packet_ROI = ''
         self.ls_ROI = SetROI.RoiList
+
+    def isInRoi(self, x, y):
+        #roi가 x,y 중심좌표를 포함하고 있는지 판단.
+        for R in self.ls_ROI:
+            if R[0][0] < x < R[1][0] and R[0][1] < y < R[1][1]:
+                self.ActiveRoi += R[2]
+                break
+
+    def RoiPackaging(self):
+        while len(self.ActiveRoi) < 8:
+            self.ActiveRoi += '00'
+
+        self.Packet_ROI = self.ActiveRoi
+        self.ActiveRoi = ''
 
     def Loop_main(self):
         while True:
@@ -46,6 +70,11 @@ class kirc_yolo:
                         # Object detected
                         center_x = int(detection[0] * width)
                         center_y = int(detection[1] * height)
+
+                        # 여기서 해당 center_x, center_y 가 30개의 roi 에 하나라도 걸리는지 확인한다.
+                        # 해당 roi에 걸리는게 있으면 ActiveRoi에 쌓임
+                        self.isInRoi(center_x, center_y)
+
                         # print(class_id, center_x , center_y)
                         w = int(detection[2] * width)  # width of object
                         h = int(detection[3] * height)
@@ -56,6 +85,9 @@ class kirc_yolo:
                         confidences.append(float(confidence))  # percentage
                         class_ids.append(class_id)  # the name of detected object
             indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.4, 0.3)  # NMS 알고리즘(한 물체를 두개의 물체로 인식하면 이거 조정하면 돼)
+
+            # Packet_ROI를 생성하고 8자리 string 으로 맞춤
+            self.RoiPackaging()
 
             for i in range(len(boxes)):
                 if i in indexes:
@@ -79,6 +111,12 @@ class kirc_yolo:
                 # 여기서 모든 roi 마다 그 안에 x,y 좌표가 포함이 되어있는지 판단하기
                 cv2.rectangle(frame, r[0], r[1], (0, 255, 0), 1)
 
+
+            if self.Packet_ROI != '00000000':
+                File_in_yolo(self.Packet_ROI)
+                print(self.Packet_ROI + '를 작성하였습니다.')
+
+
             cv2.imshow("Image", frame)
 
             key = cv2.waitKey(1)
@@ -89,6 +127,7 @@ class kirc_yolo:
 if __name__ == '__main__':
     kirc = kirc_yolo()
     kirc.Loop_main()
+
 
 
 
