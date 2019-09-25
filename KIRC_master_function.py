@@ -1,14 +1,13 @@
-
-
 class KIRC_function:
     def __init__(self):
-
+        import serial
         from collections import deque
         self.n_parkingNumber = 7
         self.n_parkingArea = 2
         self.c_InOut = 'i'
         self.str_ledOrder_1 = ''
         self.str_ledOrder_2 = ''
+        self.str_ledOrder_3 = ''
         self.que_parkingAreaBuf_1 = deque([])
         self.que_parkingAreaBuf_2 = deque([])
         self.que_orderING_1 = deque([])
@@ -20,15 +19,15 @@ class KIRC_function:
         self.str_ROI_3 = ''
         self.str_ROI_4 = ''
         self.RoiList = []
-
+        self.flag_skip = 0
         #ser = serial.serial_for_url(PORT, baudrate=115200, timeout=1)
 
 
     # 몇번주차공간, 몇번구역, in인지 out인지 판단함수
     def whichAreaOrder(self, packetGui):
         # in 인지 Out인지 판단
-        InOut = packetGui[2]
         tmp = packetGui[0] + packetGui[1]
+        InOut = packetGui[2]
         n_order = int(tmp)
         if n_order > 6:
             if InOut == 'i':
@@ -52,118 +51,167 @@ class KIRC_function:
                 self.n_parkingArea = 1
                 self.c_InOut = 'o'
 
+    # 이 부분 led받는거 전부 다 인덱스 맞추어서 수정해주어야한다.
     def whichLEDneed(self):
         if self.c_InOut == 'i':
-            if self.n_parkingNumber == 1:
-                self.str_ledOrder_1 = "14R"
-                self.str_ledOrder_2 = "22R"
+            if self.n_parkingNumber == 1:   #만약 1번 주차공간에 들어간다면 ?
+                self.str_ledOrder_1 = "142"     #14는 led번호, 2는 회전 방법을 지시.
+                self.str_ledOrder_2 = "164"     #22는 led번호, 4는 회전 방법을 지시.
+                self.str_ledOrder_3 = "017"
             elif self.n_parkingNumber == 2:
-                self.str_ledOrder_1 = "14R"
-                self.str_ledOrder_2 = "23R"
+                self.str_ledOrder_1 = "142"
+                self.str_ledOrder_2 = "174"
+                self.str_ledOrder_3 = "027"
             elif self.n_parkingNumber == 3:
-                self.str_ledOrder_1 = "14R"
-                self.str_ledOrder_2 = "24R"
+                self.str_ledOrder_1 = "142"
+                self.str_ledOrder_2 = "184"
+                self.str_ledOrder_3 = "037"
             elif self.n_parkingNumber == 4:
-                self.str_ledOrder_1 = "14R"
-                self.str_ledOrder_2 = "22L"
+                self.str_ledOrder_1 = "142"
+                self.str_ledOrder_2 = "163"
+                self.str_ledOrder_3 = "047"
             elif self.n_parkingNumber == 5:
-                self.str_ledOrder_1 = "14R"
-                self.str_ledOrder_2 = "23L"
+                self.str_ledOrder_1 = "142"
+                self.str_ledOrder_2 = "173"
+                self.str_ledOrder_3 = "057"
             elif self.n_parkingNumber == 6:
-                self.str_ledOrder_1 = "14R"
-                self.str_ledOrder_2 = "24L"
+                self.str_ledOrder_1 = "142"
+                self.str_ledOrder_2 = "183"
+                self.str_ledOrder_3 = "067"
             elif self.n_parkingNumber == 7:
-                self.str_ledOrder_1 = "16R"
-                self.str_ledOrder_2 = "27R"
+                self.str_ledOrder_1 = "152"
+                self.str_ledOrder_2 = "214"
+                self.str_ledOrder_3 = "077"
             elif self.n_parkingNumber == 8:
-                self.str_ledOrder_1 = "16R"
-                self.str_ledOrder_2 = "28R"
+                self.str_ledOrder_1 = "152"
+                self.str_ledOrder_2 = "224"
+                self.str_ledOrder_3 = "087"
             elif self.n_parkingNumber == 9:
-                self.str_ledOrder_1 = "16R"
-                self.str_ledOrder_2 = "29R"
+                self.str_ledOrder_1 = "152"
+                self.str_ledOrder_2 = "234"
+                self.str_ledOrder_3 = "097"
             elif self.n_parkingNumber == 10:
-                self.str_ledOrder_1 = "16R"
-                self.str_ledOrder_2 = "26L"
+                self.str_ledOrder_1 = "152"
+                self.str_ledOrder_2 = "203"
+                self.str_ledOrder_3 = "107"
             elif self.n_parkingNumber == 11:
-                self.str_ledOrder_1 = "16R"
-                self.str_ledOrder_2 = "27L"
+                self.str_ledOrder_1 = "152"
+                self.str_ledOrder_2 = "213"
+                self.str_ledOrder_3 = "117"
             elif self.n_parkingNumber == 12:
-                self.str_ledOrder_1 = "16R"
-                self.str_ledOrder_2 = "28L"
+                self.str_ledOrder_1 = "152"
+                self.str_ledOrder_2 = "223"
+                self.str_ledOrder_3 = "127"
             elif self.n_parkingNumber == 13:
-                self.str_ledOrder_1 = "16R"
-                self.str_ledOrder_2 = "29L"
+                self.str_ledOrder_1 = "152"
+                self.str_ledOrder_2 = "233"
+                self.str_ledOrder_3 = "137"
 
 
         # 만약 주차장 led 설계 할때 Aisle_1,2의 LED와 Aisle_Ext led가 겹치면
         # 여기서 led 인덱스 조정 해주어야한다.
         elif self.c_InOut == 'o':
             if self.n_parkingNumber == 1:
-                self.str_ledOrder_1 = "1R"
-                self.str_ledOrder_2 = "18R"
+                self.str_ledOrder_1 = "015"
+                self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 2:
-                self.str_ledOrder_1 = "2R"
-                self.str_ledOrder_2 = "18R"
+                self.str_ledOrder_1 = "025"
+                self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 3:
-                self.str_ledOrder_1 = "3R"
-                self.str_ledOrder_2 = "18R"
+                self.str_ledOrder_1 = "035"
+                self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 4:
-                self.str_ledOrder_1 = "4L"
-                self.str_ledOrder_2 = "18R"
+                self.str_ledOrder_1 = "046"
+                self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 5:
-                self.str_ledOrder_1 = "5L"
-                self.str_ledOrder_2 = "18R"
+                self.str_ledOrder_1 = "056"
+                self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 6:
-                self.str_ledOrder_1 = "6L"
-                self.str_ledOrder_2 = "18R"
+                self.str_ledOrder_1 = "066"
+                self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 7:
-                self.str_ledOrder_1 = "7R"
-                self.str_ledOrder_2 = "20L"
+                self.str_ledOrder_1 = "075"
+                self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 8:
-                self.str_ledOrder_1 = "8R"
-                self.str_ledOrder_2 = "20L"
+                self.str_ledOrder_1 = "085"
+                self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 9:
-                self.str_ledOrder_1 = "9R"
-                self.str_ledOrder_2 = "20L"
+                self.str_ledOrder_1 = "095"
+                self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 10:
-                self.str_ledOrder_1 = "10L"
-                self.str_ledOrder_2 = "20L"
+                self.str_ledOrder_1 = "106"
+                self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 11:
-                self.str_ledOrder_1 = "11L"
-                self.str_ledOrder_2 = "20L"
+                self.str_ledOrder_1 = "116"
+                self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 12:
-                self.str_ledOrder_1 = "12L"
-                self.str_ledOrder_2 = "20L"
+                self.str_ledOrder_1 = "126"
+                self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 13:
-                self.str_ledOrder_1 = "13L"
-                self.str_ledOrder_2 = "20L"
+                self.str_ledOrder_1 = "136"
+                self.str_ledOrder_2 = "241"
+
+    #입차면 3자리 패킷3개 , 출차면 3자리 패킷3개
+    def push2parkingAreaBuffer(self):
+        if self.c_InOut == 'i':
+            if self.n_parkingArea == 1:
+                self.que_parkingAreaBuf_1.append(self.str_ledOrder_1)
+                self.que_parkingAreaBuf_1.append(self.str_ledOrder_2)
+                self.que_parkingAreaBuf_1.append(self.str_ledOrder_3)
+            if self.n_parkingArea == 2:
+                self.que_parkingAreaBuf_2.append(self.str_ledOrder_1)
+                self.que_parkingAreaBuf_2.append(self.str_ledOrder_2)
+                self.que_parkingAreaBuf_2.append(self.str_ledOrder_3)
+
+        elif self.c_InOut == 'o':
+            if self.n_parkingArea == 1:
+                self.que_parkingAreaBuf_1.append(self.str_ledOrder_1)
+                self.que_parkingAreaBuf_1.append(self.str_ledOrder_2)
+            if self.n_parkingArea == 2:
+                self.que_parkingAreaBuf_2.append(self.str_ledOrder_1)
+                self.que_parkingAreaBuf_2.append(self.str_ledOrder_2)
 
     # GUI에서 들어온 차정보를 가지고 led명령화 시켜서 que_buffer에 쌓음
     def queueingBuffer(self,packetGui):
         self.whichAreaOrder(packetGui)
         self.whichLEDneed()
+        self.push2parkingAreaBuffer()
 
-        if self.n_parkingArea == 1:
-            self.que_parkingAreaBuf_1.append(self.str_ledOrder_1)
-            self.que_parkingAreaBuf_1.append(self.str_ledOrder_2)
-        if self.n_parkingArea == 2:
-            self.que_parkingAreaBuf_2.append(self.str_ledOrder_1)
-            self.que_parkingAreaBuf_2.append(self.str_ledOrder_2)
+    def isArea_enable(self, AreaNumber):
+        if AreaNumber == 1:
+            if self.que_parkingAreaBuf_1.__len__() > 0 and self.bool_parkingArea_1 is True:
+                return True
+            else:
+                return False
 
+        elif AreaNumber == 2:
+            if self.que_parkingAreaBuf_2.__len__() > 0 and self.bool_parkingArea_2 is True:
+                return True
+            else:
+                return False
 
-    #bool == True이면 Buf가 업데이트 되어있는지도 체크해야된다 !!!!!!!!!!!!!!!!!!!!!!
-    def bufToOrder(self):
-        if self.que_parkingAreaBuf_1.__len__() > 0 and self.bool_parkingArea_1 == True:
+    ###################################################################
+    ##############################수정해야함#############################
+    # 가져오는 명령어는 in이면 3개, out이면 2개로 가져와야하네.
+    # bool_parkingArea는 orderING가 비어있으면 다시 True로 만들어줘야하는데
+    def bufToOrderING(self):
+        if self.isArea_enable(1):
             # 명령어는 2개씩 가져온다
             self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
             self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
+            if 140 < int(self.que_orderING_1[0]) < 160:
+                self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
+
             self.bool_parkingArea_1 = False
 
-        if self.que_parkingAreaBuf_2.__len__() > 0 and self.bool_parkingArea_2 == True:
-            # 명령어는 2개씩 가져온다
+        if self.isArea_enable(2):
             self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
             self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
+            if 140 < int(self.que_orderING_1[0]) < 160:
+                self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
+
             self.bool_parkingArea_2 = False
+
 
     def whichROIactive(self, packetYolo):
         self.str_ROI_1 = packetYolo[0] + packetYolo[1]
