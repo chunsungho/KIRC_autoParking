@@ -3,12 +3,13 @@ import openCV_yoloTiny_basic
 import cv2
 import KIRC_master_function
 from File_IO import *
+import serial
 
 if __name__ == '__main__':
 
     uartPORT = '/dev/ttyUSB0'
     cnt = 0
-    # kirc = kirc_yolo()
+    # ser = serial.serial_for_url(uartPORT, baudrate=9600, timeout=1)
     yolo = openCV_yoloTiny_basic.kirc_yolo()
     master = KIRC_master_function.KIRC_function()
     while True:
@@ -22,17 +23,18 @@ if __name__ == '__main__':
         try:
             packetGui = File_read_gui(dirGui)
             File_write_gui(dirGui, '')
-            '''cnt += 1
-            if cnt % 100 == 0:
-                print(str(cnt) + "번째 도는중")'''
 
         except (RuntimeError, TypeError, NameError):
             print("Error !!")
 
-        if packetGui != None and len(packetGui) == 3:
+        if packetGui != None and len(packetGui) == 4:
             master.queueingBuffer(packetGui)
 
+        print("대기버퍼에 패킷개수 : " + str(master.que_parkingAreaBuf_2.__len__()))
         master.bufToOrderING()  # 현재 실행 버퍼에 넣었다.
+
+        while master.que_orderING_2.__len__() != 0:
+            print("ing버퍼 : " + master.que_orderING_2.popleft())
 
         # ROI에서 active된 애들 RoiList에 넣어줌
         # RoiList = [01, 07, 13, 00] 이런식으로 저장이 돼
