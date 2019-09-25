@@ -57,98 +57,98 @@ class KIRC_function:
             if self.n_parkingNumber == 1:   #만약 1번 주차공간에 들어간다면 ?
                 self.str_ledOrder_1 = "142"     #14는 led번호, 2는 회전 방법을 지시.
                 self.str_ledOrder_2 = "164"     #22는 led번호, 4는 회전 방법을 지시.
-                self.str_ledOrder_3 = "017"
+                self.str_ledOrder_3 = "011"
             elif self.n_parkingNumber == 2:
                 self.str_ledOrder_1 = "142"
                 self.str_ledOrder_2 = "174"
-                self.str_ledOrder_3 = "027"
+                self.str_ledOrder_3 = "021"
             elif self.n_parkingNumber == 3:
                 self.str_ledOrder_1 = "142"
                 self.str_ledOrder_2 = "184"
-                self.str_ledOrder_3 = "037"
+                self.str_ledOrder_3 = "031"
             elif self.n_parkingNumber == 4:
                 self.str_ledOrder_1 = "142"
                 self.str_ledOrder_2 = "163"
-                self.str_ledOrder_3 = "047"
+                self.str_ledOrder_3 = "041"
             elif self.n_parkingNumber == 5:
                 self.str_ledOrder_1 = "142"
                 self.str_ledOrder_2 = "173"
-                self.str_ledOrder_3 = "057"
+                self.str_ledOrder_3 = "051"
             elif self.n_parkingNumber == 6:
                 self.str_ledOrder_1 = "142"
                 self.str_ledOrder_2 = "183"
-                self.str_ledOrder_3 = "067"
+                self.str_ledOrder_3 = "061"
             elif self.n_parkingNumber == 7:
                 self.str_ledOrder_1 = "152"
                 self.str_ledOrder_2 = "214"
-                self.str_ledOrder_3 = "077"
+                self.str_ledOrder_3 = "071"
             elif self.n_parkingNumber == 8:
                 self.str_ledOrder_1 = "152"
                 self.str_ledOrder_2 = "224"
-                self.str_ledOrder_3 = "087"
+                self.str_ledOrder_3 = "081"
             elif self.n_parkingNumber == 9:
                 self.str_ledOrder_1 = "152"
                 self.str_ledOrder_2 = "234"
-                self.str_ledOrder_3 = "097"
+                self.str_ledOrder_3 = "091"
             elif self.n_parkingNumber == 10:
                 self.str_ledOrder_1 = "152"
                 self.str_ledOrder_2 = "203"
-                self.str_ledOrder_3 = "107"
+                self.str_ledOrder_3 = "101"
             elif self.n_parkingNumber == 11:
                 self.str_ledOrder_1 = "152"
                 self.str_ledOrder_2 = "213"
-                self.str_ledOrder_3 = "117"
+                self.str_ledOrder_3 = "111"
             elif self.n_parkingNumber == 12:
                 self.str_ledOrder_1 = "152"
                 self.str_ledOrder_2 = "223"
-                self.str_ledOrder_3 = "127"
+                self.str_ledOrder_3 = "121"
             elif self.n_parkingNumber == 13:
                 self.str_ledOrder_1 = "152"
                 self.str_ledOrder_2 = "233"
-                self.str_ledOrder_3 = "137"
+                self.str_ledOrder_3 = "131"
 
 
         # 만약 주차장 led 설계 할때 Aisle_1,2의 LED와 Aisle_Ext led가 겹치면
         # 여기서 led 인덱스 조정 해주어야한다.
         elif self.c_InOut == 'o':
             if self.n_parkingNumber == 1:
-                self.str_ledOrder_1 = "015"
+                self.str_ledOrder_1 = "016"
                 self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 2:
-                self.str_ledOrder_1 = "025"
+                self.str_ledOrder_1 = "026"
                 self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 3:
-                self.str_ledOrder_1 = "035"
+                self.str_ledOrder_1 = "036"
                 self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 4:
-                self.str_ledOrder_1 = "046"
+                self.str_ledOrder_1 = "045"
                 self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 5:
-                self.str_ledOrder_1 = "056"
+                self.str_ledOrder_1 = "055"
                 self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 6:
-                self.str_ledOrder_1 = "066"
+                self.str_ledOrder_1 = "065"
                 self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 7:
-                self.str_ledOrder_1 = "075"
+                self.str_ledOrder_1 = "076"
                 self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 8:
-                self.str_ledOrder_1 = "085"
+                self.str_ledOrder_1 = "086"
                 self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 9:
-                self.str_ledOrder_1 = "095"
+                self.str_ledOrder_1 = "096"
                 self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 10:
-                self.str_ledOrder_1 = "106"
+                self.str_ledOrder_1 = "105"
                 self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 11:
-                self.str_ledOrder_1 = "116"
+                self.str_ledOrder_1 = "115"
                 self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 12:
-                self.str_ledOrder_1 = "126"
+                self.str_ledOrder_1 = "125"
                 self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 13:
-                self.str_ledOrder_1 = "136"
+                self.str_ledOrder_1 = "135"
                 self.str_ledOrder_2 = "241"
 
     #입차면 3자리 패킷3개 , 출차면 3자리 패킷3개
@@ -201,15 +201,15 @@ class KIRC_function:
             self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
             if 140 < int(self.que_orderING_1[0]) < 160:
                 self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
-
+                print("ING 버퍼에 3개가 찼을거임")
             self.bool_parkingArea_1 = False
 
         if self.isArea_enable(2):
             self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
             self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
-            if 140 < int(self.que_orderING_1[0]) < 160:
-                self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
-
+            if 140 < int(self.que_orderING_2[0]) < 160:
+                self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
+                print("ING 버퍼에 3개가 찼을거임")
             self.bool_parkingArea_2 = False
 
 
