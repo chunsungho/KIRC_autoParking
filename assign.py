@@ -8,6 +8,7 @@ list_parkingArea2 = [7,8,9,11,12,13]
 
 # 일단 차 넣어놓기 ㅋㅋㅋㅋ
 dic = {10:'1035'}
+# dic = {}
 Flag_ForceOrder = False   #True 이면 강제명령임
 areaNumber = 0
 areaAssignFlag = 2
@@ -47,12 +48,20 @@ def assign_autopush(value):       # 입력값은 차량번호 4자리. 16개 자
     global areaAssignFlag
     global Flag_ForceOrder
     global areaNumber
-    if value[0] == '8':
+    if value[0] == '7':
         Flag_ForceOrder = True
         areaNumber = 8
         areaAssignFlag = 2
         dic[areaNumber] = value
         list_parkingArea2.remove(areaNumber)
+    elif value[0] == '1' and value[1] == '0':
+        for area in list_parkingArea2:
+            if area == 10:
+                Flag_ForceOrder = True
+                areaNumber = 10
+                areaAssignFlag = 2
+                dic[areaNumber] = value
+                list_parkingArea2.remove(areaNumber)
     elif value[0] == '2':
         Flag_ForceOrder = True
         areaNumber = 2
@@ -68,7 +77,10 @@ def assign_autopush(value):       # 입력값은 차량번호 4자리. 16개 자
 
     if areaAssignFlag == 2:
         if Flag_ForceOrder is False:
-            areaNumber= random.choice(list_parkingArea2)
+            while True:
+                areaNumber= random.choice(list_parkingArea2)
+                if areaNumber != 8 and areaNumber != 10:
+                    break
             dic[areaNumber] = value
             list_parkingArea2.remove(areaNumber)
 
@@ -90,7 +102,10 @@ def assign_autopush(value):       # 입력값은 차량번호 4자리. 16개 자
 
     elif areaAssignFlag == 1:
         if Flag_ForceOrder is False:
-            areaNumber = random.choice(list_parkingArea1)
+            while True:
+                areaNumber = random.choice(list_parkingArea1)
+                if areaNumber != 2 and areaNumber != 4:
+                    break
             list_parkingArea1.remove(areaNumber)
             dic[areaNumber] = value
 
