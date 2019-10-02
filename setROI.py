@@ -20,7 +20,12 @@ import cv2
 index = 1
 RoiList = []
 
- 김민재 RoiList.append((317,800), )
+# ROI값 수동으로 저장(다음 형식으로 값 넣어줄것)
+'''
+list_tmp = [(50, 108), (106, 159), '01']
+RoiList.append(list_tmp)
+'''
+
 x1 = 0
 y1 = 0
 x2 = 0
