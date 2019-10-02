@@ -59,17 +59,17 @@ class KIRC_function:
                 self.str_ledOrder_2 = "164"     #22는 led번호, 4는 회전 방법을 지시.
                 self.str_ledOrder_3 = "011"
             elif self.n_parkingNumber == 2:
-                self.str_ledOrder_1 = "142"
-                self.str_ledOrder_2 = "174"
-                self.str_ledOrder_3 = "021"
+                self.str_ledOrder_1 = "252"
+                self.str_ledOrder_2 = "214"
+                self.str_ledOrder_3 = "291"
             elif self.n_parkingNumber == 3:
                 self.str_ledOrder_1 = "142"
                 self.str_ledOrder_2 = "184"
                 self.str_ledOrder_3 = "031"
             elif self.n_parkingNumber == 4:
-                self.str_ledOrder_1 = "142"
-                self.str_ledOrder_2 = "163"
-                self.str_ledOrder_3 = "041"
+                self.str_ledOrder_1 = "252"
+                self.str_ledOrder_2 = "213"
+                self.str_ledOrder_3 = "121"
             elif self.n_parkingNumber == 5:
                 self.str_ledOrder_1 = "142"
                 self.str_ledOrder_2 = "173"
@@ -80,9 +80,9 @@ class KIRC_function:
                 self.str_ledOrder_3 = "061"
         #####################################
             elif self.n_parkingNumber == 7:
-                self.str_ledOrder_1 = "252"
-                self.str_ledOrder_2 = "224"
-                self.str_ledOrder_3 = "021"
+                self.str_ledOrder_1 = "192"
+                self.str_ledOrder_2 = "064"
+                self.str_ledOrder_3 = "181"
         #####################################
             elif self.n_parkingNumber == 8:
                 self.str_ledOrder_1 = "152"
@@ -117,14 +117,14 @@ class KIRC_function:
                 self.str_ledOrder_1 = "016"
                 self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 2:
-                self.str_ledOrder_1 = "026"
-                self.str_ledOrder_2 = "192"
+                self.str_ledOrder_1 = "296"
+                self.str_ledOrder_2 = "212" ## 좀 앞에있는 led로 줬음
             elif self.n_parkingNumber == 3:
                 self.str_ledOrder_1 = "036"
                 self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 4:
-                self.str_ledOrder_1 = "045"
-                self.str_ledOrder_2 = "192"
+                self.str_ledOrder_1 = "135"
+                self.str_ledOrder_2 = "212"
             elif self.n_parkingNumber == 5:
                 self.str_ledOrder_1 = "055"
                 self.str_ledOrder_2 = "192"
@@ -132,8 +132,8 @@ class KIRC_function:
                 self.str_ledOrder_1 = "065"
                 self.str_ledOrder_2 = "192"
             elif self.n_parkingNumber == 7:
-                self.str_ledOrder_1 = "076"
-                self.str_ledOrder_2 = "241"
+                self.str_ledOrder_1 = "186"
+                self.str_ledOrder_2 = "051"     #출차 led위치가 애매해
             elif self.n_parkingNumber == 8:
                 self.str_ledOrder_1 = "086"
                 self.str_ledOrder_2 = "241"
@@ -141,8 +141,8 @@ class KIRC_function:
                 self.str_ledOrder_1 = "096"
                 self.str_ledOrder_2 = "241"
             elif self.n_parkingNumber == 10:
-                self.str_ledOrder_1 = "105"
-                self.str_ledOrder_2 = "241"
+                self.str_ledOrder_1 = "045"
+                self.str_ledOrder_2 = "051"
             elif self.n_parkingNumber == 11:
                 self.str_ledOrder_1 = "115"
                 self.str_ledOrder_2 = "241"
@@ -202,7 +202,7 @@ class KIRC_function:
             # 명령어는 2개씩 가져온다
             self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
             self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
-            if 140 < int(self.que_orderING_1[0]) < 160:
+            if int(self.que_orderING_1[0]) == 192 or int(self.que_orderING_1[0]) == 252:
                 self.bFlagOrderING = True
                 self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
                 #print("ING 버퍼에 3개가 찼을거임")
@@ -212,7 +212,7 @@ class KIRC_function:
         if self.isArea_enable(2):
             self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
             self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
-            if 140 < int(self.que_orderING_2[0]) < 160:
+            if int(self.que_orderING_2[0]) == 192 or int(self.que_orderING_2[0]) == 252:
                 self.bFlagOrderING = True
                 self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
                 #print("ING 버퍼에 3개가 찼을거임")
