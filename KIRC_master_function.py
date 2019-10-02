@@ -20,7 +20,7 @@ class KIRC_function:
         self.str_ROI_4 = ''
         self.RoiList = []
         self.flag_skip = 0
-        #ser = serial.serial_for_url(PORT, baudrate=115200, timeout=1)
+        self.bFlagOrderING = False
 
 
     # 몇번주차공간, 몇번구역, in인지 out인지 판단함수
@@ -78,10 +78,12 @@ class KIRC_function:
                 self.str_ledOrder_1 = "142"
                 self.str_ledOrder_2 = "183"
                 self.str_ledOrder_3 = "061"
+        #####################################
             elif self.n_parkingNumber == 7:
-                self.str_ledOrder_1 = "152"
-                self.str_ledOrder_2 = "214"
-                self.str_ledOrder_3 = "071"
+                self.str_ledOrder_1 = "252"
+                self.str_ledOrder_2 = "224"
+                self.str_ledOrder_3 = "021"
+        #####################################
             elif self.n_parkingNumber == 8:
                 self.str_ledOrder_1 = "152"
                 self.str_ledOrder_2 = "224"
@@ -179,6 +181,7 @@ class KIRC_function:
 
     def isArea_enable(self, AreaNumber):
         if AreaNumber == 1:
+            # ING로 명령 받을 준비가 되어있는 상태
             if self.que_parkingAreaBuf_1.__len__() > 0 and self.bool_parkingArea_1 is True:
                 return True
             else:
@@ -200,16 +203,19 @@ class KIRC_function:
             self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
             self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
             if 140 < int(self.que_orderING_1[0]) < 160:
+                self.bFlagOrderING = True
                 self.que_orderING_1.append(self.que_parkingAreaBuf_1.popleft())
-                print("ING 버퍼에 3개가 찼을거임")
+                #print("ING 버퍼에 3개가 찼을거임")
+
             self.bool_parkingArea_1 = False
 
         if self.isArea_enable(2):
             self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
             self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
             if 140 < int(self.que_orderING_2[0]) < 160:
+                self.bFlagOrderING = True
                 self.que_orderING_2.append(self.que_parkingAreaBuf_2.popleft())
-                print("ING 버퍼에 3개가 찼을거임")
+                #print("ING 버퍼에 3개가 찼을거임")
             self.bool_parkingArea_2 = False
 
 
