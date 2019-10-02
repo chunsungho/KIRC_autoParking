@@ -17,20 +17,21 @@ Then, you can see all ROI you've saved.
 '''
 
 import cv2
-
 index = 1
 RoiList = []
+
+ 김민재 RoiList.append((317,800), )
 x1 = 0
 y1 = 0
 x2 = 0
 y2 = 0
 cropping = False
 str_index = ''
-CAM_ID = 0
-
+CAM_ID = 1
 
 def capture(camid=CAM_ID):
-    cam = cv2.VideoCapture(camid)
+    cam = cv2.VideoCapture(0)
+    # cam = cv2.VideoCapture(1)
     if cam.isOpened() == False:
         print('cant open the cam (%d)' % camid)
         return None
